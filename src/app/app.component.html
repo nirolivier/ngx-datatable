@@ -1,0 +1,19 @@
+<table>
+  <thead>
+  <tr>
+    <th *ngFor="let column of displayedColumns" [sortable]="column">{{column.name}}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngFor="let data of (data$ | async)">
+    <tr>
+      <td>{{ data.id }}</td>
+      <td>{{ data.nom }}</td>
+      <td>{{ data.prenom }}</td>
+      <td>{{ data.age }}</td>
+    </tr>
+  </ng-container>
+  </tbody>
+</table>
+
+<ngx-paginator [length]="100" [pageSize]="20" [pageSizeOptions]="[5,10,20,25,50,100]"></ngx-paginator>

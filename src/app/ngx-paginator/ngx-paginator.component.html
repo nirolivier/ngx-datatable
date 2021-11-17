@@ -1,0 +1,26 @@
+<div class="">
+  <div>
+    <span>Element per page</span>
+    <select (change)="onPageSizeChange(pageSize)">
+      <option *ngFor="let item of pageSizeOptions">{{ item }}</option>
+    </select>
+  </div>
+  <div>Page<span>{{ getRangeLabel(pageIndex, pageSize, length) }}</span></div>
+  <div>
+    <button (click)="onFirstPageClicked()"><<</button>
+    <button (click)="onPreviousPageClicked()"><</button>
+
+    <ng-container *ngIf="range.length <= 20">
+      <button *ngFor="let item of range; let i=index" (click)="onPageClicked(i)">{{ item }}</button>
+    </ng-container>
+
+    <ng-container *ngIf="range.length > 20">
+      <ng-container *ngFor="let item of range; let i=index">
+        <button *ngIf="i < 10 || i > range.length - 11" (click)="onPageClicked(i)">{{ item }}</button>
+      </ng-container>
+    </ng-container>
+
+    <button (click)="onNextPageClicked()">></button>
+    <button (click)="onLastPageClicked()">>></button>
+  </div>
+</div>
