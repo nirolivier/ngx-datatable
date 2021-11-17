@@ -6,6 +6,7 @@ import {HttpClient} from "@angular/common/http";
 import {SortableDirective} from "./directives/sortable.directive";
 import {Page} from "./core/ngx-table/page";
 import {NgxPaginatorComponent} from "./ngx-paginator/ngx-paginator.component";
+import {Data} from "@angular/router";
 
 
 const idColumn = {data: 'id', name: 'id', search: '', searchable: true, sortable: true, visible: true};
@@ -49,7 +50,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     // First we create the datasource object
-    this._ngxDataSource = new NgxTableDatasource((input) => this.loadData());
+    this._ngxDataSource = new NgxTableDatasource(this._inputRequest,(input) => this.loadData(input));
   }
 
   ngAfterViewInit(): void {
@@ -66,9 +67,9 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
 
-  private loadData(): Observable<Page<SampleEntity>> {
+  private loadData(input: DatatableInput): Observable<Page<SampleEntity>> {
     // FIXME Here you defined the behavior for retrieving your data.
-    return this._httpClient.post<Page<SampleEntity>>('/assets/data/data.json', this._inputRequest);
+    return this._httpClient.post<Page<SampleEntity>>('/assets/data/data.json', input);
   }
 }
 

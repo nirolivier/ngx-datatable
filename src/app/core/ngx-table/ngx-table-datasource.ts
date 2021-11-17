@@ -22,7 +22,9 @@ export class NgxTableDatasource<R> implements Datasource<Page<R>> {
   private _input!: DatatableInput;
   private _sortSubscription!: Subscription;
 
-  constructor(private _serverCallback: ServerCallback<R>) {
+  constructor(private _inputDatatable: DatatableInput,
+              private _serverCallback: ServerCallback<R>) {
+    this._input = this._inputDatatable;
     // no implementation
   }
 
