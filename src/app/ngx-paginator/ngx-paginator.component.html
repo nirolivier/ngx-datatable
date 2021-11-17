@@ -10,13 +10,17 @@
     <button (click)="onFirstPageClicked()"><<</button>
     <button (click)="onPreviousPageClicked()"><</button>
 
-    <ng-container *ngIf="range.length <= 20">
+    <ng-container *ngIf="range.length <= 10">
       <button *ngFor="let item of range; let i=index" (click)="onPageClicked(i)">{{ item }}</button>
     </ng-container>
 
-    <ng-container *ngIf="range.length > 20">
-      <ng-container *ngFor="let item of range; let i=index">
-        <button *ngIf="i < 10 || i > range.length - 11" (click)="onPageClicked(i)">{{ item }}</button>
+    <ng-container *ngIf="range.length > 10">
+      <ng-container *ngFor="let item of range.slice(0, 5); let i=index">
+        <button (click)="onPageClicked(i)">{{ item + 1 }}</button>
+      </ng-container>
+      <span>...</span>
+      <ng-container *ngFor="let item of range.slice(range.length - 5, range.length); let i=index">
+        <button (click)="onPageClicked(i)">{{ item + 1 }}</button>
       </ng-container>
     </ng-container>
 
