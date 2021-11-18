@@ -5,26 +5,26 @@
       <option *ngFor="let item of pageSizeOptions" [value]="item" [selected]="item === pageSize">{{ item }}</option>
     </select>
   </div>
-  <div>Page<span>{{ rangeLabel }}</span></div>
+  <div>Items<span style="padding: 0 10px">{{ rangeLabel }}</span></div>
   <div>
-    <button (click)="onFirstPageClicked()"><<</button>
-    <button (click)="onPreviousPageClicked()"><</button>
+    <button (click)="onFirstPageClicked()" [disabled]="!hasPreviousPage()"><<</button>
+    <button (click)="onPreviousPageClicked()" [disabled]="!hasPreviousPage()"><</button>
 
-    <ng-container *ngIf="range.length <= 10">
-      <button *ngFor="let item of range; let i=index" (click)="onPageClicked(i)">{{ item }}</button>
+    <ng-container *ngIf="pages.length <= 10">
+      <button *ngFor="let pageNumber of pages; let i=index" (click)="onPageClicked(i)">{{ pageNumber }}</button>
     </ng-container>
 
-    <ng-container *ngIf="range.length > 10">
-      <ng-container *ngFor="let item of range.slice(0, 5); let i=index">
-        <button (click)="onPageClicked(i)">{{ item + 1 }}</button>
+    <ng-container *ngIf="pages.length > 10">
+      <ng-container *ngFor="let pageNumber of pages.slice(0, 5); let i=index">
+        <button (click)="onPageClicked(i)">{{ pageNumber }}</button>
       </ng-container>
       <span>...</span>
-      <ng-container *ngFor="let item of range.slice(range.length - 5, range.length); let i=index">
-        <button (click)="onPageClicked(i)">{{ item + 1 }}</button>
+      <ng-container *ngFor="let pageNumber of pages.slice(pages.length - 5, pages.length); let i=index">
+        <button (click)="onPageClicked(i)">{{ pageNumber }}</button>
       </ng-container>
     </ng-container>
 
-    <button (click)="onNextPageClicked()">></button>
-    <button (click)="onLastPageClicked()">>></button>
+    <button (click)="onNextPageClicked()" [disabled]="!hasNextPage()">></button>
+    <button (click)="onLastPageClicked()" [disabled]="!hasNextPage()">>></button>
   </div>
 </div>

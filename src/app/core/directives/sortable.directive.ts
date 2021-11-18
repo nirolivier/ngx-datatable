@@ -1,5 +1,5 @@
 import {Directive, ElementRef, HostListener, Input, OnChanges, OnInit, Renderer2} from '@angular/core';
-import {Column, Direction, Sort} from "../core/ngx-table";
+import {Column, Direction, Sort} from "../ngx-table";
 import {BehaviorSubject, Observable, Subject} from "rxjs";
 
 /**

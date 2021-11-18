@@ -3,7 +3,7 @@ import {map, Observable} from "rxjs";
 import {SampleEntity} from "./core/ngx-table/sample-entity";
 import {Column, DatatableInput, NgxTableDatasource} from "./core/ngx-table";
 import {HttpClient} from "@angular/common/http";
-import {SortableDirective} from "./directives/sortable.directive";
+import {SortableDirective} from "./core/directives/sortable.directive";
 import {Page} from "./core/ngx-table/page";
 import {NgxPaginatorComponent} from "./ngx-paginator/ngx-paginator.component";
 import {Data} from "@angular/router";
@@ -32,16 +32,19 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(SortableDirective) sort!: SortableDirective;
   @ViewChild(NgxPaginatorComponent) paginator!: NgxPaginatorComponent;
 
-  private _ngxDataSource!: NgxTableDatasource<SampleEntity>;
+  private readonly _ngxDataSource: NgxTableDatasource<Page<SampleEntity>>;
   private readonly _inputRequest: DatatableInput;
 
+  length!: number;
+  pageSize!: number;
+
   constructor(private _httpClient: HttpClient) {
-    // Init the input request
     this._inputRequest = new DatatableInput();
     this._inputRequest.columns = columnDefs;
     this._inputRequest.sorts = [{column: idColumn, direction: 'ASC'}];
     this._inputRequest.length = 10;
     this._inputRequest.start = 0;
+    this._ngxDataSource = new NgxTableDatasource(this._inputRequest,(input) => this.loadData(input));
   }
 
   ngOnDestroy(): void {
@@ -49,8 +52,6 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    // First we create the datasource object
-    this._ngxDataSource = new NgxTableDatasource(this._inputRequest,(input) => this.loadData(input));
   }
 
   ngAfterViewInit(): void {
@@ -60,15 +61,22 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this._ngxDataSource.paginator = this.paginator;
 
     // We connect the datasource. We subscribe to the datasource.
-    this.data$ = this._ngxDataSource.connect().pipe(map(page => page.content as SampleEntity[]));
+    this.data$ = this._ngxDataSource.connect().pipe(map(response =>{
+      //TODO Put here your mapping of the pagination info which is returned from the server. This is an sample mapping.
+      this.length = response.totalElements!;
+      this.pageSize = response.size!;
+
+      // Return the data.
+      return response.content as SampleEntity[];
+    }));
 
     // Finally we load the data. This will trigger the connect function.
-    this._ngxDataSource.load(this._inputRequest);
+    this._ngxDataSource.load();
   }
 
 
   private loadData(input: DatatableInput): Observable<Page<SampleEntity>> {
-    // FIXME Here you defined the behavior for retrieving your data.
+    // FIXME Here you define the behavior for retrieving your data.
     return this._httpClient.post<Page<SampleEntity>>('/assets/data/data.json', input);
   }
 }

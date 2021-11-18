@@ -1,34 +1,51 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PageEvent} from "../core/ngx-table";
 
 const DEFAULT_PAGE_SIZE = 10;
 
+/**
+ * Shows the item range label.
+ *
+ * @param pageIndex the page index
+ * @param pageSize the page size
+ * @param length the total length of record
+ */
+function _getItemRangeLabel(pageIndex: number, pageSize: number, length: number): string {
+  if (length == 0 || pageSize == 0) {
+    return `0 of ${length}`;
+  }
+
+  length = Math.max(length, 0);
+
+  const startIndex = pageIndex * pageSize;
+  const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+  return `${startIndex + 1} – ${endIndex} of ${length}`;
+}
+
+/**
+ * This component is responsible of paginating the data.
+ *
+ * @author Nirina Olivier razafindrabekoto
+ */
 @Component({
   selector: 'ngx-paginator',
   templateUrl: './ngx-paginator.component.html',
   styleUrls: ['./ngx-paginator.component.scss']
 })
-export class NgxPaginatorComponent implements OnInit, OnChanges {
+export class NgxPaginatorComponent implements OnInit {
 
   @Input()
-  length!: number;
+  length: number = 0;
 
   @Output()
-  page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
-  range: number[] = [];
-  pageIndex!: number;
+  pageChange: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
+
+  pages: number[] = [];
+  pageIndex: number = 0;
   rangeLabel: string = '';
 
   constructor() {
+    // no implementation
   }
 
   private _pageSizeOptions: number[] = [];
@@ -58,12 +75,10 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.pageIndex = 0;
     this._updatePageSizeOptions();
-    this.rangeLabel = this.getRangeLabel(this.pageIndex, this.pageSize, this.length);
-  }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes && changes['length']) {
-      this.range = [...Array(changes['length'].currentValue).keys()];
+    this.rangeLabel = _getItemRangeLabel(this.pageIndex, this.pageSize, this.length);
+    for (let pageNumber = 1; pageNumber <= this._getNumberOfPages(); pageNumber++) {
+      this.pages.push(pageNumber);
     }
   }
 
@@ -77,6 +92,7 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
     const previousPageIndex = this.pageIndex;
     this.pageIndex = 0;
     this._emitPageEvent(previousPageIndex);
+    this.rangeLabel = _getItemRangeLabel(this.pageIndex, this.pageSize, this.length);
   }
 
   /**
@@ -90,6 +106,7 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
     const previousPageIndex = this.pageIndex;
     this.pageIndex--;
     this._emitPageEvent(previousPageIndex);
+    this.rangeLabel = _getItemRangeLabel(this.pageIndex, this.pageSize, this.length);
   }
 
   /**
@@ -99,6 +116,7 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
     const previousPageIndex = index - 1;
     this.pageIndex = index;
     this._emitPageEvent(previousPageIndex);
+    this.rangeLabel = _getItemRangeLabel(this.pageIndex, this.pageSize, this.length);
   }
 
   /**
@@ -112,6 +130,7 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
     const previousPageIndex = this.pageIndex;
     this.pageIndex++;
     this._emitPageEvent(previousPageIndex);
+    this.rangeLabel = _getItemRangeLabel(this.pageIndex, this.pageSize, this.length);
   }
 
   /**
@@ -123,8 +142,9 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
     }
 
     const previousPageIndex = this.pageIndex;
-    this.pageIndex = this.getNumberOfPages() - 1;
+    this.pageIndex = this._getNumberOfPages() - 1;
     this._emitPageEvent(previousPageIndex);
+    this.rangeLabel = _getItemRangeLabel(this.pageIndex, this.pageSize, this.length);
   }
 
   /**
@@ -138,38 +158,9 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
    * Indicates if next page exists
    */
   hasNextPage(): boolean {
-    const maxPageIndex = this.getNumberOfPages() - 1;
+    const maxPageIndex = this._getNumberOfPages() - 1;
     return this.pageIndex < maxPageIndex && this.pageSize != 0;
   }
-
-  /** Get the number of pages */
-  getNumberOfPages(): number {
-    if (!this.pageSize) {
-      return 0;
-    }
-
-    return Math.ceil(this.length / this.pageSize);
-  }
-
-  /**
-   * Show the interval of the page.
-   *
-   * @param pageIndex the page index
-   * @param pageSize the page size
-   * @param length the total length of record
-   */
-  getRangeLabel(pageIndex: number, pageSize: number, length: number): string {
-    debugger
-    if (length == 0 || pageSize == 0) {
-      return `0 of ${length}`;
-    }
-
-    length = Math.max(length, 0);
-
-    const startIndex = pageIndex * pageSize;
-    const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
-    return `${startIndex + 1} – ${endIndex} of ${length}`;
-  };
 
   /**
    * Fires when the page size changed
@@ -182,11 +173,20 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
     this.pageIndex = Math.floor(startIndex / pageSize) || 0;
     this.pageSize = pageSize;
     this._emitPageEvent(previousPageIndex);
-    this.rangeLabel = this.getRangeLabel(this.pageIndex, this.pageSize, this.length);
+    this.rangeLabel = _getItemRangeLabel(this.pageIndex, this.pageSize, this.length);
+  }
+
+  /** Get the number of pages */
+  private _getNumberOfPages(): number {
+    if (!this.pageSize) {
+      return 0;
+    }
+
+    return Math.ceil(this.length / this.pageSize);
   }
 
   private _emitPageEvent(previousPageIndex: number): void {
-    return this.page.emit({
+    return this.pageChange.emit({
       pageSize: this.pageSize,
       pageIndex: this.pageIndex,
       previousPageIndex: previousPageIndex,

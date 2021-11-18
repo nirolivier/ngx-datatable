@@ -1,7 +1,7 @@
 <table>
   <thead>
   <tr>
-    <th *ngFor="let column of displayedColumns" [sortable]="column">{{column.name}}</th>
+    <th *ngFor="let column of displayedColumns" >{{column.name}}<span [sortable]="column"></span></th>
   </tr>
   </thead>
   <tbody>
@@ -16,4 +16,4 @@
   </tbody>
 </table>
 
-<ngx-paginator [length]="100" [pageSize]="20" [pageSizeOptions]="[5,10,20,25,50,100]"></ngx-paginator>
+<ngx-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="[5,10,20,25,50,100]"></ngx-paginator>

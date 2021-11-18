@@ -4,8 +4,7 @@ import {DatatableInput} from "./datatable-input";
 import {Sort} from "./sort";
 import {PageEvent} from "./page-event";
 import {ServerCallback} from "./types";
-import {SortableDirective} from "../../directives/sortable.directive";
-import {Page} from "./page";
+import {SortableDirective} from "../directives/sortable.directive";
 import {NgxPaginatorComponent} from "../../ngx-paginator/ngx-paginator.component";
 
 
@@ -15,12 +14,15 @@ import {NgxPaginatorComponent} from "../../ngx-paginator/ngx-paginator.component
  *
  * @author Nirina Olivier razafindrabekoto
  */
-export class NgxTableDatasource<R> implements Datasource<Page<R>> {
+export class NgxTableDatasource<R> implements Datasource<R> {
+  private readonly _datasource: Subject<R> = new Subject<R>();
+
   public sort!: SortableDirective;
   public paginator!: NgxPaginatorComponent;
-  private readonly _datasource: Subject<Page<R>> = new Subject<Page<R>>();
-  private _input!: DatatableInput;
+
+  private _input: DatatableInput;
   private _sortSubscription!: Subscription;
+  private _paginatorSubscription!: Subscription;
 
   constructor(private _inputDatatable: DatatableInput,
               private _serverCallback: ServerCallback<R>) {
@@ -30,33 +32,32 @@ export class NgxTableDatasource<R> implements Datasource<Page<R>> {
 
   /**
    * Load the data from server based on the input datatable object.
-   * @param input the input datatable.
    */
-  load(input: DatatableInput): void {
-    this._input = input;
-
+  load(): void {
     if (!this._serverCallback) {
-      this._datasource.next({} as Page<R>);
+      this._datasource.next({} as R);
       return;
     }
 
-    this._serverCallback(input)
-      .subscribe((page: Page<R>) => this._datasource.next(page));
+    this._serverCallback(this._input)
+      .subscribe((response: R) => this._datasource.next(response));
   }
 
   /**
    * {@inheritDoc}
    */
-  connect(): Observable<Page<R>> {
+  connect(): Observable<R> {
     this._unsubscribeSort();
+    this._unsubscribePaginator()
 
     // We subscribe to the sorting event.
     if (this.sort) {
       this._sortSubscription = this.sort.sortChange.subscribe((sort: Sort) => this._sortChange(sort));
     }
 
+    // We subscribe to the pagination event.
     if (this.paginator) {
-      this.paginator.page.asObservable().subscribe(pageEvent => this._pageChange(pageEvent))
+      this._paginatorSubscription = this.paginator.pageChange.asObservable().subscribe(pageEvent => this._pageChange(pageEvent));
     }
 
     // We observe the datasource.
@@ -68,6 +69,29 @@ export class NgxTableDatasource<R> implements Datasource<Page<R>> {
    */
   disconnect(): void {
     this._unsubscribeSort();
+    this._unsubscribePaginator();
+  }
+
+  /**
+   * Unsubscribe the sorting.
+   *
+   * @private
+   */
+  private _unsubscribeSort() {
+    if (this._sortSubscription) {
+      this._sortSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Unsubscribe the paginator.
+   *
+   * @private
+   */
+  private _unsubscribePaginator() {
+    if (this._paginatorSubscription) {
+      this._paginatorSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -75,15 +99,13 @@ export class NgxTableDatasource<R> implements Datasource<Page<R>> {
    * @param pageEvent the page event.
    */
   private _pageChange(pageEvent: PageEvent): void {
+    if (!pageEvent) {
+      return;
+    }
+
     this._input.length = pageEvent.pageSize;
     this._input.start = pageEvent.pageIndex;
-    this.load(this._input);
-  }
-
-  private _unsubscribeSort() {
-    if (this._sortSubscription) {
-      this._sortSubscription.unsubscribe();
-    }
+    this.load();
   }
 
   /**
@@ -93,7 +115,7 @@ export class NgxTableDatasource<R> implements Datasource<Page<R>> {
    * @private
    */
   private _sortChange(sort: Sort): void {
-    if (!sort.column) {
+    if (!sort || !sort.column) {
       return;
     }
 
@@ -116,6 +138,6 @@ export class NgxTableDatasource<R> implements Datasource<Page<R>> {
       this._input.sorts.push(sort);
     }
 
-    this.load(this._input);
+    this.load();
   }
 }
