@@ -1,11 +1,11 @@
 <div class="">
   <div>
     <span>Element per page</span>
-    <select (change)="onPageSizeChange(pageSize)">
-      <option *ngFor="let item of pageSizeOptions">{{ item }}</option>
+    <select [ngModel]="pageSize" (ngModelChange)="onPageSizeChange($event)">
+      <option *ngFor="let item of pageSizeOptions" [value]="item" [selected]="item === pageSize">{{ item }}</option>
     </select>
   </div>
-  <div>Page<span>{{ getRangeLabel(pageIndex, pageSize, length) }}</span></div>
+  <div>Page<span>{{ rangeLabel }}</span></div>
   <div>
     <button (click)="onFirstPageClicked()"><<</button>
     <button (click)="onPreviousPageClicked()"><</button>

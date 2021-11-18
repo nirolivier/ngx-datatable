@@ -1,4 +1,13 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {PageEvent} from "../core/ngx-table";
 
 const DEFAULT_PAGE_SIZE = 10;
@@ -17,7 +26,7 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
   page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
   range: number[] = [];
   pageIndex!: number;
-  private _initialized: boolean = false;
+  rangeLabel: string = '';
 
   constructor() {
   }
@@ -47,9 +56,9 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this._initialized = true;
     this.pageIndex = 0;
     this._updatePageSizeOptions();
+    this.rangeLabel = this.getRangeLabel(this.pageIndex, this.pageSize, this.length);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -150,6 +159,7 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
    * @param length the total length of record
    */
   getRangeLabel(pageIndex: number, pageSize: number, length: number): string {
+    debugger
     if (length == 0 || pageSize == 0) {
       return `0 of ${length}`;
     }
@@ -172,6 +182,7 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
     this.pageIndex = Math.floor(startIndex / pageSize) || 0;
     this.pageSize = pageSize;
     this._emitPageEvent(previousPageIndex);
+    this.rangeLabel = this.getRangeLabel(this.pageIndex, this.pageSize, this.length);
   }
 
   private _emitPageEvent(previousPageIndex: number): void {
@@ -184,10 +195,6 @@ export class NgxPaginatorComponent implements OnInit, OnChanges {
   }
 
   private _updatePageSizeOptions() {
-    if (!this._initialized) {
-      return;
-    }
-
     // If no page size is provided, use the first page size option or the default page size.
     if (!this.pageSize) {
       this._pageSize =
