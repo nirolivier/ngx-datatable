@@ -1,12 +1,10 @@
 import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {map, Observable} from "rxjs";
-import {SampleEntity} from "./core/ngx-table/sample-entity";
-import {Column, DatatableInput, NgxTableDatasource} from "./core/ngx-table";
+import {SampleEntity} from "./sample-entity";
+import {Column, DatatableInput, NgxTableDatasource, Page} from "./core/ngx-table";
 import {HttpClient} from "@angular/common/http";
 import {SortableDirective} from "./core/directives/sortable.directive";
-import {Page} from "./core/ngx-table/page";
-import {NgxPaginatorComponent} from "./ngx-paginator/ngx-paginator.component";
-import {Data} from "@angular/router";
+import {NgxPaginator} from "./ngx-paginator/ngx-paginator.component";
 
 
 const idColumn = {data: 'id', name: 'id', search: '', searchable: true, sortable: true, visible: true};
@@ -30,13 +28,11 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
   displayedColumns: Column[] = columnDefs;
 
   @ViewChild(SortableDirective) sort!: SortableDirective;
-  @ViewChild(NgxPaginatorComponent) paginator!: NgxPaginatorComponent;
-
-  private readonly _ngxDataSource: NgxTableDatasource<Page<SampleEntity>>;
-  private readonly _inputRequest: DatatableInput;
-
+  @ViewChild(NgxPaginator) paginator!: NgxPaginator;
   length!: number;
   pageSize!: number;
+  private readonly _ngxDataSource: NgxTableDatasource<Page<SampleEntity>>;
+  private readonly _inputRequest: DatatableInput;
 
   constructor(private _httpClient: HttpClient) {
     this._inputRequest = new DatatableInput();
@@ -44,7 +40,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this._inputRequest.sorts = [{column: idColumn, direction: 'ASC'}];
     this._inputRequest.length = 10;
     this._inputRequest.start = 0;
-    this._ngxDataSource = new NgxTableDatasource(this._inputRequest,(input) => this.loadData(input));
+    this._ngxDataSource = new NgxTableDatasource(this._inputRequest, (input) => this.loadData(input));
   }
 
   ngOnDestroy(): void {
@@ -61,7 +57,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this._ngxDataSource.paginator = this.paginator;
 
     // We connect the datasource. We subscribe to the datasource.
-    this.data$ = this._ngxDataSource.connect().pipe(map(response =>{
+    this.data$ = this._ngxDataSource.connect().pipe(map(response => {
       //TODO Put here your mapping of the pagination info which is returned from the server. This is an sample mapping.
       this.length = response.totalElements!;
       this.pageSize = response.size!;

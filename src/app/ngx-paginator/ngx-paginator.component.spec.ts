@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NgxPaginatorComponent } from './ngx-paginator.component';
+import { NgxPaginator } from './ngx-paginator.component';
 
 describe('NgxPaginatorComponent', () => {
-  let component: NgxPaginatorComponent;
-  let fixture: ComponentFixture<NgxPaginatorComponent>;
+  let component: NgxPaginator;
+  let fixture: ComponentFixture<NgxPaginator>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NgxPaginatorComponent ]
+      declarations: [ NgxPaginator ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NgxPaginatorComponent);
+    fixture = TestBed.createComponent(NgxPaginator);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

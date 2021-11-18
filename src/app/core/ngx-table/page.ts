@@ -2,7 +2,7 @@ import {Pageable} from "./pageable";
 import {SortInfo} from "./sort-info";
 
 /**
- * This interface represent the datatable output
+ * This interface represents the datatable output
  *
  * @param <R> the type of the returned data
  * @param <S> the type of the sorting

@@ -1,7 +1,7 @@
-import {SortInfo} from "./sort-info";
+import {SortInfo} from './sort-info';
 
 /**
- * This interface represents the structure of pageable data.
+ * This interface represents the structure of a pageable data.
  *
  * @author Nirina Olivier razafindrabekoto
  */

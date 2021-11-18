@@ -1,9 +1,12 @@
 import {Directive, ElementRef, HostListener, Input, OnInit, Renderer2} from '@angular/core';
 import {Column, Direction, Sort} from "../ngx-table";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 
 /**
- * This directive allow the datatable column to be sortable.
+ * This directive allows to sort a table column.
+ * By default the sort direction is set to 'ASC'.
+ * The sorting flow is defined as follow: <code>'ASC'->'DESC'->'undefined'->'ASC'.</code>
+ *
  *
  * @author Nirina Olivier razafindrabekoto
  */
@@ -17,7 +20,7 @@ export class SortableDirective implements OnInit {
   @Input('sortable')
   column!: Column;
 
-  private readonly _sortChange: BehaviorSubject<Sort> = new BehaviorSubject<Sort>(new Sort());
+  private readonly _sortChange: Subject<Sort> = new Subject<Sort>();
   private _direction: Direction = 'ASC';
 
   constructor(private _el: ElementRef,
@@ -36,7 +39,6 @@ export class SortableDirective implements OnInit {
 
   ngOnInit(): void {
     this.sortChange = this._sortChange.asObservable();
-    this._emitSortEvent();
     this._updateView();
   }
 

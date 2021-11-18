@@ -1,19 +1,19 @@
 /**
- * This interface allow to an object to act as datasource.
+ * An interface that provides methods to retrieve the data source.
  *
  * @author Nirina Olivier razafindrabekoto
  */
-import {Observable} from "rxjs";
+import {Observable} from 'rxjs';
 
 export interface Datasource<R> {
 
   /**
-   * Initialize the datatable
+   * This method returns an observable of data that will be used to fill the table content.
    */
   connect(): Observable<R>;
 
   /**
-   * Used to release resource
+   * This method allows to release resources that are used during the subscription in an observable object.
    */
   disconnect(): void;
 }

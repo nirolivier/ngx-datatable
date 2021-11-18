@@ -5,14 +5,14 @@ import {AppComponent} from './app.component';
 import { SortableDirective } from './core/directives/sortable.directive';
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
-import { NgxPaginatorComponent } from './ngx-paginator/ngx-paginator.component';
+import { NgxPaginator } from './ngx-paginator/ngx-paginator.component';
 import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
     AppComponent,
     SortableDirective,
-    NgxPaginatorComponent
+    NgxPaginator
   ],
   imports: [
     CommonModule,

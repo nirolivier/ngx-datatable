@@ -1,28 +1,26 @@
 /**
- * This class defines the datatable column structure
+ * This interface contains the column information.
  *
  * @author Nirina Olivier razafindrabekoto
  */
-export class Column {
+export interface Column {
 
-  /** This contains the title header column.*/
-  name: string = '';
+  /** This field contains the title header column.*/
+  name?: string;
 
-  /** This contains the unique name of the column. Typically, it contains the name the data property name. */
-  data!: string;
+  /** This mandatory field contains the unique name of the column. Typically, it contains the name the data property name. */
+  data: string;
 
-  /** Indicates if the column should be visible */
-  visible: boolean = true;
+  /** Indicates if this should be visible */
+  visible: boolean;
 
-  /** Indicates if the column should be sortable */
-  sortable: boolean = true;
+  /** Indicates if this should be sortable */
+  sortable: boolean;
 
-  /** Indicates if the column should be searchable.*/
-  searchable: boolean = true;
+  /** Indicates if this should be searchable.*/
+  searchable: boolean;
 
-  /** Contains the text to search.*/
-  search: string = '';
+  /** This field contains the text to search.*/
+  search?: string;
 
-  constructor() {
-  }
 }

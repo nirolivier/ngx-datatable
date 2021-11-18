@@ -1,11 +1,11 @@
+import {Column} from './column';
+import {Sort} from './sort';
+
 /**
  * This class represents the input request which is used to load data from server.
  *
  * @author Nirina Olivier razafindrabekoto
  */
-import {Column} from "./column";
-import {Sort} from "./sort";
-
 export class DatatableInput {
   /** List the datatable columns  */
   columns: Column[] = [];

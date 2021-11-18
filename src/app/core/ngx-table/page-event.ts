@@ -3,17 +3,17 @@
  *
  * @author Nirina Olivier razafindrabekoto
  */
-export class PageEvent {
+export interface PageEvent {
 
   /** Contains the page size */
-  pageSize!: number;
+  pageSize: number;
 
   /** Contains the current page index */
-  pageIndex!: number;
+  pageIndex: number;
 
   /** Contains the previous page index */
   previousPageIndex?: number;
 
   /** Contains the total number of elements being paged */
-  length!: number;
+  length: number;
 }

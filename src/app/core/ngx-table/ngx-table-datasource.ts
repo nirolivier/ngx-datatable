@@ -1,37 +1,34 @@
-import {Datasource} from "./datasource";
-import {Observable, Subject, Subscription} from "rxjs";
-import {DatatableInput} from "./datatable-input";
-import {Sort} from "./sort";
-import {PageEvent} from "./page-event";
-import {ServerCallback} from "./types";
-import {SortableDirective} from "../directives/sortable.directive";
-import {NgxPaginatorComponent} from "../../ngx-paginator/ngx-paginator.component";
+import {Datasource} from './datasource';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {DatatableInput} from './datatable-input';
+import {Sort} from './sort';
+import {PageEvent} from './page-event';
+import {ServerCallback} from './types';
+import {SortableDirective} from '../directives/sortable.directive';
+import {Paginator} from './paginator';
 
 
 /**
  * This class is aimed to handle the server side access.
- * It provides the loading, sorting, pagination functionality.
+ * It provides the loading, sorting, pagination functionalities.
+ * This class takes two parameter in its constructor: the input datatable of type {@link DatatableInput}
+ * and the server callback function which is used by the datasource to retrieve data.
  *
  * @author Nirina Olivier razafindrabekoto
  */
 export class NgxTableDatasource<R> implements Datasource<R> {
+  public sort?: SortableDirective;
+  public paginator?: Paginator;
   private readonly _datasource: Subject<R> = new Subject<R>();
+  private _sortSubscription?: Subscription;
+  private _paginatorSubscription?: Subscription;
 
-  public sort!: SortableDirective;
-  public paginator!: NgxPaginatorComponent;
-
-  private _input: DatatableInput;
-  private _sortSubscription!: Subscription;
-  private _paginatorSubscription!: Subscription;
-
-  constructor(private _inputDatatable: DatatableInput,
+  constructor(private _input: DatatableInput,
               private _serverCallback: ServerCallback<R>) {
-    this._input = this._inputDatatable;
-    // no implementation
   }
 
   /**
-   * Load the data from server based on the input datatable object.
+   * Loads the data from server based on the input datatable object.
    */
   load(): void {
     if (!this._serverCallback) {
@@ -48,16 +45,16 @@ export class NgxTableDatasource<R> implements Datasource<R> {
    */
   connect(): Observable<R> {
     this._unsubscribeSort();
-    this._unsubscribePaginator()
+    this._unsubscribePaginator();
 
     // We subscribe to the sorting event.
-    if (this.sort) {
+    if (this.sort && this.sort.sortChange) {
       this._sortSubscription = this.sort.sortChange.subscribe((sort: Sort) => this._sortChange(sort));
     }
 
     // We subscribe to the pagination event.
-    if (this.paginator) {
-      this._paginatorSubscription = this.paginator.pageChange.asObservable().subscribe(pageEvent => this._pageChange(pageEvent));
+    if (this.paginator && this.paginator.pageChange) {
+      this._paginatorSubscription = this.paginator.pageChange.subscribe(pageEvent => this._pageChange(pageEvent));
     }
 
     // We observe the datasource.
