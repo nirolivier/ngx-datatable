@@ -1,6 +1,7 @@
 import {Directive, ElementRef, HostListener, Input, OnInit, Renderer2} from '@angular/core';
 import {Column, Direction, Sort} from "../ngx-table";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
+import {SortSubscriber} from '../ngx-table/sort-subscriber';
 
 /**
  * This directive allows to sort a table column.
@@ -13,7 +14,7 @@ import {BehaviorSubject, Observable, Subject} from "rxjs";
 @Directive({
   selector: '[sortable]'
 })
-export class SortableDirective implements OnInit {
+export class SortableDirective implements OnInit, SortSubscriber {
 
   public sortChange!: Observable<Sort>;
 

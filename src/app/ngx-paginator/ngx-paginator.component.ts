@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {PageEvent, Paginator} from '../core/ngx-table';
+import {PageEvent, PaginationSubscriber} from '../core/ngx-table';
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -32,7 +32,7 @@ function getItemRangeLabel(pageIndex: number, pageSize: number, length: number):
   templateUrl: './ngx-paginator.component.html',
   styleUrls: ['./ngx-paginator.component.scss']
 })
-export class NgxPaginator implements OnInit, Paginator {
+export class NgxPaginator implements OnInit, PaginationSubscriber {
 
   @Input()
   length: number = 0;

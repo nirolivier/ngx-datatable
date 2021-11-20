@@ -4,8 +4,8 @@ import {DatatableInput} from './datatable-input';
 import {Sort} from './sort';
 import {PageEvent} from './page-event';
 import {ServerCallback} from './types';
-import {SortableDirective} from '../directives/sortable.directive';
-import {Paginator} from './paginator';
+import {PaginationSubscriber} from './pagination-subscriber';
+import {SortSubscriber} from './sort-subscriber';
 
 
 /**
@@ -17,8 +17,8 @@ import {Paginator} from './paginator';
  * @author Nirina Olivier razafindrabekoto
  */
 export class NgxTableDatasource<R> implements Datasource<R> {
-  public sort?: SortableDirective;
-  public paginator?: Paginator;
+  public sort?: SortSubscriber;
+  public paginator?: PaginationSubscriber;
   private readonly _datasource: Subject<R> = new Subject<R>();
   private _sortSubscription?: Subscription;
   private _paginatorSubscription?: Subscription;

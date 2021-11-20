@@ -8,4 +8,4 @@ export * from './page-event';
 export * from './pageable';
 export * from './page';
 export * from './sort-info';
-export * from './paginator';
+export * from './pagination-subscriber';
