@@ -1,7 +1,7 @@
 /**
  * A sample entity.
  *
- * @author Nirina Olivier razafindrabekoto
+ * @author Nio Rabekoto
  */
 export interface SampleEntity {
   id: number;

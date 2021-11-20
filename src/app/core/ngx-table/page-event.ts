@@ -1,7 +1,7 @@
 /**
  * This interface contains the page event information.
  *
- * @author Nirina Olivier razafindrabekoto
+ * @author Nio Rabekoto
  */
 export interface PageEvent {
 

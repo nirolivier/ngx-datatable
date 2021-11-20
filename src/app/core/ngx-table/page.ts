@@ -6,7 +6,7 @@ import {SortInfo} from "./sort-info";
  *
  * @param <R> the type of the returned data
  * @param <S> the type of the sorting
- * @author Nirina Olivier razafindrabekoto
+ * @author Nio Rabekoto
  */
 export interface Page<R> {
   content?: R[];

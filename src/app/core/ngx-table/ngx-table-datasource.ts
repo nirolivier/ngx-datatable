@@ -14,7 +14,7 @@ import {SortSubscriber} from './sort-subscriber';
  * This class takes two parameter in its constructor: the input datatable of type {@link DatatableInput}
  * and the server callback function which is used by the datasource to retrieve data.
  *
- * @author Nirina Olivier razafindrabekoto
+ * @author Nio Rabekoto
  */
 export class NgxTableDatasource<R> implements Datasource<R> {
   public sort?: SortSubscriber;

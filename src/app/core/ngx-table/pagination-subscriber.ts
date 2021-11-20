@@ -1,7 +1,7 @@
 /**
  * This interface provides functionality to subscribe to an pagination event.
  *
- * @author Nirina Olivier razafindrabekoto
+ * @author Nio Rabekoto
  */
 import {PageEvent} from './page-event';
 import {EventEmitter} from '@angular/core';

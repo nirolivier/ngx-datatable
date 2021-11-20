@@ -3,7 +3,7 @@ import {SortInfo} from './sort-info';
 /**
  * This interface represents the structure of a pageable data.
  *
- * @author Nirina Olivier razafindrabekoto
+ * @author Nio Rabekoto
  */
 export interface Pageable {
   sort?: SortInfo;

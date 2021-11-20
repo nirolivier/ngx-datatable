@@ -4,7 +4,7 @@ import {Sort} from './sort';
 /**
  * An interface that provides functionalities to sort a column.
  *
- * @author Nirina Olivier razafindrabekoto
+ * @author Nio Rabekoto
  */
 export interface SortSubscriber {
 

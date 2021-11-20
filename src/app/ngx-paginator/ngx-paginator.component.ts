@@ -25,7 +25,7 @@ function getItemRangeLabel(pageIndex: number, pageSize: number, length: number):
 /**
  * This component is responsible of paginating the data.
  *
- * @author Nirina Olivier razafindrabekoto
+ * @author Nio Rabekoto
  */
 @Component({
   selector: 'ngx-paginator',

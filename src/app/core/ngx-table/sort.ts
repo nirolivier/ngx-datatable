@@ -4,7 +4,7 @@ import {Direction} from './types';
 /**
  * This class contains the sorting information.
  *
- * @author Nirina Olivier razafindrabekoto
+ * @author Nio Rabekoto
  */
 export interface Sort {
   /** The instance of the column to be sorted. */

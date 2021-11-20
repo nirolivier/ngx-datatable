@@ -1,10 +1,10 @@
+import {Observable} from 'rxjs';
+
 /**
  * An interface that provides methods to retrieve the data source.
  *
- * @author Nirina Olivier razafindrabekoto
+ * @author Nio Rabekoto
  */
-import {Observable} from 'rxjs';
-
 export interface Datasource<R> {
 
   /**

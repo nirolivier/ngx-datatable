@@ -9,7 +9,7 @@ import {SortSubscriber} from '../ngx-table/sort-subscriber';
  * The sorting flow is defined as follow: <code>'ASC'->'DESC'->'undefined'->'ASC'.</code>
  *
  *
- * @author Nirina Olivier razafindrabekoto
+ * @author Nio Rabekoto
  */
 @Directive({
   selector: '[sortable]'
@@ -69,7 +69,7 @@ export class SortableDirective implements OnInit, SortSubscriber {
     if (this._direction === 'ASC') {
       this._direction = 'DESC';
     } else if (this._direction === 'DESC') {
-      this._direction = null;
+      this._direction = undefined;
     } else {
       this._direction = 'ASC';
     }

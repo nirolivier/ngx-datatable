@@ -7,12 +7,14 @@ import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import { NgxPaginator } from './ngx-paginator/ngx-paginator.component';
 import {HttpClientModule} from "@angular/common/http";
+import { TestDirective } from './core/ngx-table/test.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     SortableDirective,
-    NgxPaginator
+    NgxPaginator,
+    TestDirective
   ],
   imports: [
     CommonModule,
